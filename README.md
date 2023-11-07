@@ -178,3 +178,5 @@ while True:
 	#updating the gamme window
 	pygame.display.flip()
 	clock.tick(60)
+
+ References:  AI chat, and  https://github.com/clear-code-projects/Pong_in_Pygame
