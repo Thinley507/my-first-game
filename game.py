@@ -152,6 +152,7 @@ while True:
 	ball_animation()
 	player_animation()
 	opponent_animation()
+	ball_start()
 	
 	
 	#game visuals
@@ -177,3 +178,11 @@ while True:
 	#updating the gamme window
 	pygame.display.flip()
 	clock.tick(60)
+
+
+
+
+
+
+
+ 
