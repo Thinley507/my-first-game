@@ -1,182 +1,26 @@
-# my-first-game
-import os
-import pygame, sys, random
-from pygame import mixer
+This unit test code is testing the functionality of a Pong game using the Pygame library. The code is divided into several test methods, each testing a specific aspect of the game.
 
-def ball_animation():
-	global ball_speed_x, ball_speed_y, player_score, opponent_score, score_time
-	ball.x += ball_speed_x
-	ball.y += ball_speed_y
+The `setUp` method is called before each test method is executed. It initializes the Pygame library, creates a display window with a size of 800x600 pixels, and creates a clock object to control the frame rate.
 
-	if ball.top <= 0 or ball.bottom >= screen_height:
-		pygame.mixer.Sound.play(pong_sound)
-		ball_speed_y *= -1
+The `tearDown` method is called after each test method is executed. It simply quits the Pygame library.
 
-	# player score	
-	if ball.left <= 0:
-		pygame.mixer.Sound.play(score_sound)
-		player_score += 1
-		score_time = pygame.time.get_ticks()
+The first test method `test_game_setup` ensures that the game is initialized correctly by checking that the `screen` and `clock` objects are not None.
 
-	# opponent score	
-	if ball.right >= screen_width:
-		pygame.mixer.Sound.play(score_sound)
-		opponent_score += 1
-		score_time = pygame.time.get_ticks()
+The second test method `test_ball_animation` checks that the ball's position is updated correctly. It creates a ball object with a starting position of (400, 300) and a size of 30x30 pixels. It also defines the ball's speed in the x and y directions. By updating the ball's position based on the speed values, it verifies that the ball's position has been updated correctly.
 
-	if ball.colliderect(player) and ball_speed_x > 0:
-		pygame.mixer.Sound.play(pong_sound)
-		if abs(ball.right - player.left) < 10:
-			ball_speed_x *= -1
-		elif abs(ball.bottom - player.top) < 10 and ball_speed_y > 0:
-			ball_speed_y *= -1
-		elif abs(ball.top - player.bottom) < 10 and ball_speed_y < 0:
-			ball_speed_y *= -1
+The third test method `test_player_animation` checks that the player's position is updated correctly. It creates a player object with a starting position of (770, 270) and a size of 10x140 pixels. It also defines the player's speed. By updating the player's position based on the speed value, it verifies that the player's position has been updated correctly.
 
-	if ball.colliderect(opponent) and ball_speed_x < 0: 
-		pygame.mixer.Sound.play(pong_sound)
-		if abs(ball.left - opponent.right) < 10:
-			ball_speed_x *= -1
-		elif abs(ball.bottom - opponent.top) < 10 and ball_speed_y > 0:
-			ball_speed_y *= -1
-		elif abs(ball.top - opponent.bottom) < 10 and ball_speed_y < 0:
-			ball_speed_y *= -1
+The fourth test method `test_opponent_animation` is similar to `test_player_animation`, but it checks the opponent's position instead.
 
-def player_animation():
-	player.y += player_speed
-	if player.top <= 0:
-		player.top = 0
-	if player.bottom >= screen_height:
-		player.bottom = screen_height
+The fifth test method `test_ball_start` checks that the ball starts correctly. It creates a ball object with a starting position of (400, 300) and a size of 30x30 pixels. It also defines the ball's speed in the x and y directions, and a variable to keep track of the score time. By checking the values of the ball's speed and score time, it verifies that they are set correctly.
 
-def opponent_animation():
-	if opponent.top < ball.y:
-		opponent.y += opponent_speed
-	if opponent.bottom > ball.y:
-		opponent.bottom -= opponent_speed
+The last test method `test_key_event_handling` tests the handling of key events. It simulates a keydown event for the down arrow key, which should increase the player's speed. By checking the value of the player's speed, it verifies that it has been updated correctly. Then, it simulates a keyup event for the same key, which should decrease the player's speed. Again, by checking the value of the player's speed, it verifies that it has been updated correctly.
 
-	if opponent.top <= 0:
-		opponent.top = 0
-	if opponent.bottom >= screen_height:
-		opponent.bottom = screen_height			
+Finally, the `unittest.main()` line at the end of the code is used to run all the test methods defined in the test class.
+
+
 	
-def ball_start():
-	global ball_speed_x, ball_speed_y, score_time
-	current_time = pygame.time.get_ticks()
-	ball.center = (screen_width/2, screen_height/2)
 
-	if current_time - score_time < 700:
-		number_three = game_font.render("3", False, grey12)
-		screen.blit(number_three, (screen_width/2 - 10, screen_height/2 + 20))
-	if 700 < current_time - score_time < 1400:
-		number_number = game_font.render("2", False, grey12)
-		screen.blit(number_number, (screen_width/2 - 10, screen_height/2 + 20))
-	if 1400 < current_time - score_time < 2100:
-		number_one = game_font.render("2", False, grey12)
-		screen.blit(number_one, (screen_width/2 - 10, screen_height/2 + 20))
-
-	if current_time - score_time < 2100:
-		ball_speed_x, ball_speed_y = 0,0
-	else:
-		ball_speed_y = 7 * random.choice((1, -1))
-		ball_speed_x = 7 * random.choice((1, -1))
-		score_time = None
-
-
-# normal game set up
-pygame.mixer.pre_init()
-pygame.init()
-clock = pygame.time.Clock()
-
-# to set the screen size of the main window
-screen_width = 800
-screen_height = 600
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption('Pong')
-
-# Rectangles for the game
-
-ball = pygame.Rect(screen_width/2 - 15, screen_height/2 - 15, 30, 30)
-player = pygame.Rect(screen_width - 20, screen_height/2 - 70, 10, 140)
-opponent = pygame.Rect(10, screen_height/2 - 70, 10, 140)
-
-
-
-bg_color = pygame.Color(110, 139, 61)
-ball_color = (0, 0, 0)
-line_color = (3, 3, 3)
-player_color = (139, 10, 80)
-opponent_color = (104, 34,139)
-grey12 = (255, 255, 255)
-
-# game variables
-ball_speed_x = 7 * random.choice((1, -1))
-ball_speed_y = 7 * random.choice((1, -1))
-player_speed = 0
-opponent_speed = 7
-
-# score timer
-score_time = True
-
-
-# text variables
-player_score = 0
-opponent_score = 0
-game_font = pygame.font.Font(None, 50)
-
-# game sound
-pong_sound = pygame.mixer.Sound("sfx_point.wav")
-score_sound = pygame.mixer.Sound("sfx_swooshing.wav")
-
-# condition for the game to run
-
-while True:
-	#Handling input
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			pygame.quit()
-			sys.exit()
-
-		if event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_DOWN:
-				player_speed += 7
-			if event.key == pygame.K_UP:
-				player_speed -= 7
-		if event.type == pygame.KEYUP:
-			if event.key == pygame.K_DOWN:
-				player_speed -= 7
-			if event.key == pygame.K_UP:
-				player_speed += 7
-
-					
-
-	ball_animation()
-	player_animation()
-	opponent_animation()
 	
-	
-	#game visuals
-	screen.fill(bg_color)
-	pygame.draw.rect(screen, player_color, player)
-	pygame.draw.rect(screen, opponent_color, opponent)
-	pygame.draw.ellipse(screen, ball_color, ball)
-	pygame.draw.aaline(screen, line_color, (screen_width/2,0), (screen_width/2, screen_height))
 
-	if score_time:
-		ball_start()
-
-
-	player_text = game_font.render(f"{player_score}", False, grey12)
-	screen.blit(player_text, (550, 150))
-
-	opponent_text = game_font.render(f"{opponent_score}", False, grey12)
-	screen.blit(opponent_text, (200, 150))
-
-
-
-
-	#updating the gamme window
-	pygame.display.flip()
-	clock.tick(60)
-
- References:  AI chat, and  https://github.com/clear-code-projects/Pong_in_Pygame
+				
